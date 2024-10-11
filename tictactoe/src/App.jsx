@@ -17,15 +17,15 @@ function App() {
     return turnFromStorage ?? TURNS.x
   })
 
-  const [winnder, setWinner] = useState(null) 
+  const [winner, setWinner] = useState(null) 
 
   const resetGame = () => {
     setBoard(Array(9).fill(null))
     setTurn(TURNS.x)
     setWinner(null)
 
-    windows.localStorageStorage.removeItem('board')
-    windows.localStorageStorage.removeItem('turn')
+    window.localStorageStorage.removeItem('board')
+    window.localStorageStorage.removeItem('turn')
   }
 
   const updateBoard = (index) => {
