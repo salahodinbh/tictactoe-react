@@ -17,7 +17,10 @@ function App() {
     return turnFromStorage ?? TURNS.x
   })
 
-  const [winner, setWinner] = useState(null) 
+  const [winner, setWinner] = useState(() => {
+    const winnerFromStorage = window.localStorage.getItem('winner')
+    return winnerFromStorage ?? null
+  })
 
   const resetGame = () => {
     setBoard(Array(9).fill(null))
@@ -26,6 +29,15 @@ function App() {
 
     window.localStorageStorage.removeItem('board')
     window.localStorageStorage.removeItem('turn')
+  }
+
+  const showWinner = (newWinner, newBoard) => {
+    if (newWinner) {
+      confetti()
+      setWinner(newWinner)
+    } else if (checkEndGame(newBoard)) {
+      setWinner(false)
+    }
   }
 
   const updateBoard = (index) => {
@@ -43,19 +55,18 @@ function App() {
 
     window.localStorage.setItem('board', JSON.stringify(newBoard))
     window.localStorage.setItem('turn', newTurn)
+
     const newWinner = checkWinner(newBoard)
-    if (newWinner) {
-      confetti()
-      setWinner(newWinner)
-    } else if (checkEndGame(newBoard)) {
-      setWinner(false)
-    }
+    setWinner(newWinner)
+    window.localStorage.setItem('winner', newWinner)
+    
+    showWinner(newWinner, newBoard)
   }
 
   return (
     <main className='board'>
       <h1>Tic Tac Toe</h1>
-      <section className="game" onLoad={updateBoard()}>
+      <section className="game">
         {
           board.map((square, index) => {
             return (
